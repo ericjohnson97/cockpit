@@ -1,5 +1,10 @@
 import { AlertLevel } from '@/types/alert'
 
+export class CommandAck {
+  command: string
+  result: string
+}
+
 /**
  * Dilution of precision
  */

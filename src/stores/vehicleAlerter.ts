@@ -13,6 +13,12 @@ export const useVehicleAlerterStore = defineStore('vehicle-alerter', () => {
     if (!vehicleStore.statusText.text) return
     alertStore.pushAlert(new Alert(vehicleStore.statusText.severity, vehicleStore.statusText.text))
   })
+  watch(vehicleStore.commandAck, () => {
+
+    if (vehicleStore.commandAck.result === 'MAV_RESULT_ACCEPTED') return
+    const msg = "MAV_CMD " + vehicleStore.commandAck.command + " acknowledged with result " + vehicleStore.commandAck.result
+    alertStore.pushAlert(new Alert(AlertLevel.Info, msg))
+  })
 
   watch(
     () => vehicleStore.mode,

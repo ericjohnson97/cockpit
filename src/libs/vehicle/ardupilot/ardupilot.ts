@@ -34,6 +34,7 @@ import {
   Altitude,
   Attitude,
   Battery,
+  CommandAck,
   Coordinates,
   FixTypeGPS,
   Parameter,
@@ -67,6 +68,7 @@ export abstract class ArduPilotVehicle<Modes> extends Vehicle.AbstractVehicle<Mo
   _velocity = new Velocity({ x: 0, y: 0, z: 0, ground: 0, overall: 0 })
   _cpuLoad = 0 // CPU load in percentage
   _isArmed = false // Defines if the vehicle is armed
+  _last_ack = new CommandAck()
   _powerSupply = new PowerSupply()
   _lastParameter = new Parameter()
   _totalParametersCount: number | undefined = undefined
@@ -254,6 +256,12 @@ export abstract class ArduPilotVehicle<Modes> extends Vehicle.AbstractVehicle<Mo
         this._attitude.yaw = attitude.yaw
         this.onAttitude.emit()
         break
+      }
+      case MAVLinkType.COMMAND_ACK: {
+        const commandAck = mavlink_message.message as Message.CommandAck
+        this._last_ack.command = commandAck.command.type
+        this._last_ack.result = commandAck.result.type
+        this.onCommandAck.emit()
       }
       case MAVLinkType.GLOBAL_POSITION_INT: {
         const position = mavlink_message.message as Message.GlobalPositionInt
@@ -448,6 +456,14 @@ export abstract class ArduPilotVehicle<Modes> extends Vehicle.AbstractVehicle<Mo
    */
   batteries(): Battery[] {
     return [new Battery({ cells: [0, 0, 0, 0, 0, 0], voltage: 0 })]
+  }
+
+  /**
+   * Get command ack
+   * @returns {CommandAck}
+   */
+  commandAck(): CommandAck {
+    return this._last_ack
   }
 
   /**

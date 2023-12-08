@@ -21,6 +21,7 @@ import * as Protocol from '@/libs/vehicle/protocol/protocol'
 import type {
   Altitude,
   Attitude,
+  CommandAck,
   Coordinates,
   PageDescription,
   PowerSupply,
@@ -99,6 +100,7 @@ export const useMainVehicleStore = defineStore('main-vehicle', () => {
   const vehicleType = ref<MavType>()
   const altitude: Altitude = reactive({} as Altitude)
   const attitude: Attitude = reactive({} as Attitude)
+  const commandAck: CommandAck = reactive({} as CommandAck)
   const coordinates: Coordinates = reactive({} as Coordinates)
   const powerSupply: PowerSupply = reactive({} as PowerSupply)
   const velocity: Velocity = reactive({} as Velocity)
@@ -251,6 +253,9 @@ export const useMainVehicleStore = defineStore('main-vehicle', () => {
     mainVehicle.value.onArm.add((armed: boolean) => {
       isArmed.value = armed
     })
+    mainVehicle.value.onCommandAck.add((ack: CommandAck) => {
+      Object.assign(commandAck, ack)
+    })
     mainVehicle.value.onTakeoff.add((inAir: boolean) => {
       flying.value = inAir
     })
@@ -388,6 +393,7 @@ export const useMainVehicleStore = defineStore('main-vehicle', () => {
     altitude,
     attitude,
     coordinates,
+    commandAck,
     velocity,
     powerSupply,
     statusText,

@@ -6,6 +6,7 @@ import type {
   Altitude,
   Attitude,
   Battery,
+  CommandAck,
   Coordinates,
   PageDescription,
   Parameter,
@@ -74,6 +75,7 @@ export abstract class AbstractVehicle<Modes> {
   onAttitude = new Signal<Attitude>()
   onAltitude = new Signal<Altitude>()
   onBatteries = new Signal<Battery[]>()
+  onCommandAck = new Signal<CommandAck>()
   onCpuLoad = new Signal<number>()
   onGenericVariables = new Signal<Record<string, unknown>>()
   onMode = new Signal<Modes>()
@@ -111,6 +113,7 @@ export abstract class AbstractVehicle<Modes> {
     this.onAttitude.register_caller(() => this.attitude())
     this.onBatteries.register_caller(() => this.batteries())
     this.onCpuLoad.register_caller(() => this.cpuLoad())
+    this.onCommandAck.register_caller(() => this.commandAck())
     this.onGenericVariables.register_caller(() => this.genericVariables())
     this.onMode.register_caller(() => this.mode())
     this.onPosition.register_caller(() => this.position())
@@ -174,6 +177,7 @@ export abstract class AbstractVehicle<Modes> {
   abstract attitude(): Attitude
   abstract batteries(): Battery[]
   abstract configurationPages(): PageDescription[]
+  abstract commandAck(): CommandAck
   abstract cpuLoad(): number // Percentage
   abstract disarm(): boolean
   abstract isArmed(): boolean

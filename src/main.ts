@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import FloatingVue from 'floating-vue'
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
+import dragVerify from 'vue-drag-verify'
 import VueVirtualScroller from 'vue-virtual-scroller'
 
 import App from './App.vue'
@@ -21,5 +22,6 @@ loadFonts()
 
 const app = createApp(App)
 app.component('FontAwesomeIcon', FontAwesomeIcon)
+app.component('DragVerify', dragVerify)
 app.use(router).use(vuetify).use(createPinia()).use(FloatingVue).use(VueVirtualScroller)
 app.mount('#app')

@@ -118,41 +118,39 @@ export const useMainVehicleStore = defineStore('main-vehicle', () => {
   const modes = ref<Map<string, any>>()
 
   /**
- * Calls the provided action function if the user confirms through the slide-to-confirm component.
- *
- * @param actionFunc - A function representing the action to be confirmed.
- * @returns A Promise that resolves if the action is successfully executed or rejects in case of cancellation or errors.
- */
-function slideToConfirm(actionFunc: () => void): Promise<void> {
-  return new Promise((resolve, reject) => {
-    // Show slide to confirm component
-    showSlideToConfirm.value = true;
+   * Calls the provided action function if the user confirms through the slide-to-confirm component.
+   * @param { void } actionFunc  - A function representing the action to be confirmed.
+   * @returns { void } A Promise that resolves if the action is successfully executed or rejects in case of cancellation or errors.
+   */
+  function slideToConfirm(actionFunc: () => void): Promise<void> {
+    return new Promise((resolve, reject) => {
+      // Show slide to confirm component
+      showSlideToConfirm.value = true
 
-    // Watch for changes on confirmed variable
-    const stopWatching = watch(confirmed, (newValue, oldValue) => {
-      if (newValue === true) {
-        // Stop the watcher to prevent memory leaks
-        stopWatching();
+      // Watch for changes on confirmed variable
+      /* eslint-disable @typescript-eslint/no-unused-vars */
+      const stopWatching = watch(confirmed, (newValue, oldValue) => {
+        if (newValue === true) {
+          // Stop the watcher to prevent memory leaks
+          stopWatching()
 
-        confirmed.value = false;
+          confirmed.value = false
 
-        // Execute the provided action function
-        try {
-          actionFunc();
-          resolve();
-        } catch (error) {
-          reject(error);
+          // Execute the provided action function
+          try {
+            actionFunc()
+            resolve()
+          } catch (error) {
+            reject(error)
+          }
         }
-      }
-      if (showSlideToConfirm.value === false) {
-        stopWatching();
-        reject(new Error('User cancelled the action'));
-      }
-    });
-  });
-}
-
-
+        if (showSlideToConfirm.value === false) {
+          stopWatching()
+          reject(new Error('User cancelled the action'))
+        }
+      })
+    })
+  }
 
   /**
    * Check if vehicle is online (no more than 5 seconds passed since last heartbeat)
@@ -164,57 +162,52 @@ function slideToConfirm(actionFunc: () => void): Promise<void> {
 
   /**
    * Arm the vehicle
-   * 
-   * @returns A Promise that resolves when arming is successful or rejects if an error occurs or the action is cancelled.
+   * @returns { void } A Promise that resolves when arming is successful or rejects if an error occurs or the action is cancelled.
    */
   function arm(): Promise<void> {
     return slideToConfirm(() => {
       if (!mainVehicle.value) {
-        throw new Error('action rejected or failed');
+        throw new Error('action rejected or failed')
       }
-      mainVehicle.value.arm();
-    });
+      mainVehicle.value.arm()
+    })
   }
 
   /**
    * Disarm the vehicle
-   * 
-   * @returns A Promise that resolves when disarming is successful or rejects if an error occurs or the action is cancelled.
+   * @returns { void } A Promise that resolves when disarming is successful or rejects if an error occurs or the action is cancelled.
    */
   function disarm(): Promise<void> {
     return slideToConfirm(() => {
       if (!mainVehicle.value) {
-        throw new Error('action rejected or failed');
+        throw new Error('action rejected or failed')
       }
-      mainVehicle.value.disarm();
-    });
+      mainVehicle.value.disarm()
+    })
   }
   /**
- * Initiates the takeoff process, requiring user confirmation.
- *
- * @returns A Promise that resolves when the takeoff is successful or rejects if an error occurs or the action is cancelled.
- */
-function takeoff(): Promise<void> {
-  return slideToConfirm(() => {
-    if (!mainVehicle.value) {
-      throw new Error('action rejected or failed');
-    }
-    mainVehicle.value.takeoff();
-  });
-}
+   * Initiates the takeoff process, requiring user confirmation.
+   * @returns { void } A Promise that resolves when the takeoff is successful or rejects if an error occurs or the action is cancelled.
+   */
+  function takeoff(): Promise<void> {
+    return slideToConfirm(() => {
+      if (!mainVehicle.value) {
+        throw new Error('action rejected or failed')
+      }
+      mainVehicle.value.takeoff()
+    })
+  }
   /**
    * Land the vehicle
-   * 
-   * @returns A Promise that resolves when landing is successful or rejects if an error occurs or the action is cancelled.
+   * @returns { void } A Promise that resolves when landing is successful or rejects if an error occurs or the action is cancelled.
    */
   function land(): Promise<void> {
     return slideToConfirm(() => {
       if (!mainVehicle.value) {
-        throw new Error('action rejected or failed');
+        throw new Error('action rejected or failed')
       }
-      mainVehicle.value.land();
-    });
-
+      mainVehicle.value.land()
+    })
   }
 
   /**
@@ -226,8 +219,7 @@ function takeoff(): Promise<void> {
    * @param { number } latitude Latitude in degrees
    * @param { number } longitude Longitude in degrees
    * @param { number } alt Altitude in meters
-   * 
-   * @returns A Promise that resolves when the vehicle reaches the waypoint or rejects if an error occurs or the action is cancelled.
+   * @returns { void } A Promise that resolves when the vehicle reaches the waypoint or rejects if an error occurs or the action is cancelled.
    */
   function goTo(
     hold: number,
@@ -245,11 +237,10 @@ function takeoff(): Promise<void> {
 
     return slideToConfirm(() => {
       if (!mainVehicle.value) {
-        throw new Error('action rejected or failed');
+        throw new Error('action rejected or failed')
       }
-      mainVehicle.value.goTo(hold, acceptanceRadius, passRadius, yaw, waypoint);
-    });
-    
+      mainVehicle.value.goTo(hold, acceptanceRadius, passRadius, yaw, waypoint)
+    })
   }
 
   /**

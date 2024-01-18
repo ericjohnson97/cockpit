@@ -104,29 +104,29 @@
 
           <Transition name="fade">
             <div v-if="showBottomBarNow" class="bottom-container">
-                <div class="flex items-center space-x-4 mb-3">
-                  <slide-unlock
-                    v-if="vehicleStore.showSlideToConfirm"
-                    ref="vueslideunlock"
-                    :auto-width="false"
-                    :circle="true"
-                    :disabled="false"
-                    :noanimate="false"
-                    :width="400"
-                    :height="50"
-                    text="slide to confirm"
-                    success-text="success"
-                    name="slideunlock"
-                    class="slide-unlock"
-                    @completed="onSlideConfirmed()"
-                  />
-                  <button
-                    v-if="vehicleStore.showSlideToConfirm"
-                    class="w-12 h-12 flex items-center justify-center rounded-full bg-white text-gray"
-                    @click="cancelAction"
-                  >
-                    X
-                  </button>
+              <div class="flex items-center space-x-4 mb-3">
+                <slide-unlock
+                  v-if="vehicleStore.showSlideToConfirm"
+                  ref="vueslideunlock"
+                  :auto-width="false"
+                  :circle="true"
+                  :disabled="false"
+                  :noanimate="false"
+                  :width="400"
+                  :height="50"
+                  text="slide to confirm"
+                  success-text="success"
+                  name="slideunlock"
+                  class="slide-unlock"
+                  @completed="onSlideConfirmed()"
+                />
+                <button
+                  v-if="vehicleStore.showSlideToConfirm"
+                  class="w-12 h-12 flex items-center justify-center rounded-full bg-white text-gray"
+                  @click="cancelAction"
+                >
+                  X
+                </button>
               </div>
 
               <div class="bottom-bar h-12">
@@ -321,7 +321,7 @@ body.hide-cursor {
 
 .bottom-bar {
   width: 100%;
-  background: rgba(108, 117, 125, 0.5); 
+  background: rgba(108, 117, 125, 0.5);
   display: flex;
   justify-content: space-between;
 }

@@ -14,6 +14,7 @@ import {
   registerActionCallback,
 } from '@/libs/joystick/protocols/cockpit-actions'
 import { MavlinkManualControlManager } from '@/libs/joystick/protocols/mavlink-manual-control'
+import { slideToConfirm } from '@/libs/slide-to-confirm'
 import type { ArduPilot } from '@/libs/vehicle/ardupilot/ardupilot'
 import type { ArduPilotParameterSetData } from '@/libs/vehicle/ardupilot/types'
 import * as Protocol from '@/libs/vehicle/protocol/protocol'
@@ -110,47 +111,10 @@ export const useMainVehicleStore = defineStore('main-vehicle', () => {
   const statusText: StatusText = reactive({} as StatusText)
   const statusGPS: StatusGPS = reactive({} as StatusGPS)
   const genericVariables: Record<string, unknown> = reactive({})
-  const showSlideToConfirm = ref<boolean>(false)
-  const confirmed = ref<boolean>(false)
 
   const mode = ref<string | undefined>(undefined)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const modes = ref<Map<string, any>>()
-
-  /**
-   * Calls the provided action function if the user confirms through the slide-to-confirm component.
-   * @param { void } actionFunc  - A function representing the action to be confirmed.
-   * @returns { void } A Promise that resolves if the action is successfully executed or rejects in case of cancellation or errors.
-   */
-  function slideToConfirm(actionFunc: () => void): Promise<void> {
-    return new Promise((resolve, reject) => {
-      // Show slide to confirm component
-      showSlideToConfirm.value = true
-
-      // Watch for changes on confirmed variable
-      /* eslint-disable @typescript-eslint/no-unused-vars */
-      const stopWatching = watch(confirmed, (newValue, oldValue) => {
-        if (newValue === true) {
-          // Stop the watcher to prevent memory leaks
-          stopWatching()
-
-          confirmed.value = false
-
-          // Execute the provided action function
-          try {
-            actionFunc()
-            resolve()
-          } catch (error) {
-            reject(error)
-          }
-        }
-        if (showSlideToConfirm.value === false) {
-          stopWatching()
-          reject(new Error('User cancelled the action'))
-        }
-      })
-    })
-  }
 
   /**
    * Check if vehicle is online (no more than 5 seconds passed since last heartbeat)
@@ -502,7 +466,5 @@ export const useMainVehicleStore = defineStore('main-vehicle', () => {
     configurationPages,
     rtcConfiguration,
     genericVariables,
-    showSlideToConfirm,
-    confirmed,
   }
 })

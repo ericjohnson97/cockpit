@@ -104,31 +104,7 @@
 
           <Transition name="fade">
             <div v-if="showBottomBarNow" class="bottom-container">
-              <div class="flex items-center space-x-4 mb-3">
-                <slide-unlock
-                  v-if="vehicleStore.showSlideToConfirm"
-                  ref="vueslideunlock"
-                  :auto-width="false"
-                  :circle="true"
-                  :disabled="false"
-                  :noanimate="false"
-                  :width="400"
-                  :height="50"
-                  text="slide to confirm"
-                  success-text="success"
-                  name="slideunlock"
-                  class="slide-unlock"
-                  @completed="onSlideConfirmed()"
-                />
-                <button
-                  v-if="vehicleStore.showSlideToConfirm"
-                  class="w-12 h-12 flex items-center justify-center rounded-full bg-white text-gray"
-                  @click="cancelAction"
-                >
-                  X
-                </button>
-              </div>
-
+              <SlideToConfirm />
               <div class="bottom-bar h-12">
                 <MiniWidgetContainer
                   :container="widgetStore.currentView.miniWidgetContainers[0]"
@@ -170,7 +146,6 @@ import {
   watch,
 } from 'vue'
 import { useRoute } from 'vue-router'
-import SlideUnlock from 'vue-slide-unlock'
 
 import ConfigurationMenu from '@/components/ConfigurationMenu.vue'
 import { coolMissionNames } from '@/libs/funny-name/words'
@@ -179,17 +154,15 @@ import {
   registerActionCallback,
   unregisterActionCallback,
 } from '@/libs/joystick/protocols/cockpit-actions'
-import { useMainVehicleStore } from '@/stores/mainVehicle'
 import { useMissionStore } from '@/stores/mission'
 
 import Dialog from './components/Dialog.vue'
 import EditMenu from './components/EditMenu.vue'
 import MiniWidgetContainer from './components/MiniWidgetContainer.vue'
+import SlideToConfirm from './components/SlideToConfirm.vue'
 import Alerter from './components/widgets/Alerter.vue'
 import { datalogger } from './libs/sensors-logging'
 import { useWidgetManagerStore } from './stores/widgetManager'
-
-const vehicleStore = useMainVehicleStore()
 
 const widgetStore = useWidgetManagerStore()
 
@@ -226,20 +199,6 @@ const timeNow = useTimestamp({ interval: 1000 })
 
 // Control showing mouse
 let hideMouseTimeoutId: ReturnType<typeof setInterval>
-
-const onSlideConfirmed = (): void => {
-  vehicleStore.showSlideToConfirm = false
-  vehicleStore.confirmed = true
-  console.log('Slide confirmed!')
-  // Additional logic here
-}
-
-const cancelAction = (): void => {
-  vehicleStore.showSlideToConfirm = false
-  vehicleStore.confirmed = false
-  console.log('Slide canceled!')
-  // Additional logic here
-}
 
 const hideMouse = (): void => {
   document.body.classList.add('hide-cursor')

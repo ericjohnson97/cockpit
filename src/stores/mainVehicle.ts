@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import { computed, reactive, ref, watch } from 'vue'
 
 import { defaultGlobalAddress } from '@/assets/defaults'
+import { altitude_setpoint, showAltitudeSlider } from '@/libs/altitude-slider'
 import * as Connection from '@/libs/connection/connection'
 import { ConnectionManager } from '@/libs/connection/connection-manager'
 import type { Package } from '@/libs/connection/m2r/messages/mavlink2rest'
@@ -154,11 +155,14 @@ export const useMainVehicleStore = defineStore('main-vehicle', () => {
    * @returns { void } A Promise that resolves when the takeoff is successful or rejects if an error occurs or the action is cancelled.
    */
   function takeoff(): Promise<void> {
+    showAltitudeSlider.value = true
     return slideToConfirm(() => {
+      showAltitudeSlider.value = false
       if (!mainVehicle.value) {
         throw new Error('action rejected or failed')
       }
-      mainVehicle.value.takeoff()
+
+      mainVehicle.value.takeoff(altitude_setpoint.value)
     })
   }
   /**

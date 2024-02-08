@@ -1,9 +1,6 @@
 <template>
   <SnappingGrid v-if="store.showGrid && store.editingMode" :grid-interval="store.gridInterval" class="snapping-grid" />
   <div class="widgets-view">
-    <div class="altitude-slider-container">
-      <AltitudeSlider />
-    </div>
     <div v-for="view in store.viewsToShow" :key="view.hash" class="widget-view">
       <template v-for="widget in view.widgets.slice().reverse()" :key="widget">
         <WidgetHugger
@@ -61,7 +58,6 @@ import ImageView from '@/components/widgets/ImageView.vue'
 import { useWidgetManagerStore } from '@/stores/widgetManager'
 import { WidgetType } from '@/types/widgets'
 
-import AltitudeSlider from '../components/AltitudeSlider.vue'
 import SnappingGrid from '../components/SnappingGrid.vue'
 import WidgetHugger from '../components/WidgetHugger.vue'
 import Attitude from '../components/widgets/Attitude.vue'
@@ -111,17 +107,5 @@ const store = useWidgetManagerStore()
   justify-content: center;
   background-color: rgb(122, 25, 25);
   z-index: 50;
-}
-.altitude-slider-container {
-  position: absolute; /* or absolute, depending on your layout */
-  right: 2%;
-  top: 25%;
-  bottom: 0;
-  width: 25px; /* Adjust width as necessary */
-  height: 50%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center; /* Centers the slider vertically */
-  z-index: 100; /* Ensure it's above other content */
 }
 </style>

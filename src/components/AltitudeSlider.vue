@@ -30,7 +30,15 @@ const formattedValue = computed(() => altitude_setpoint.value.toFixed(1))
   font-size: 0.8rem;
 }
 .slider-div {
-  height: 100%;
-  width: 100%;
+  position: fixed;
+  right: 2%;
+  top: 25%;
+  bottom: 0;
+  width: 25px;
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 100;
 }
 </style>

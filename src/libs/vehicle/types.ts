@@ -1,3 +1,5 @@
+import type { Type } from '@/libs/connection/m2r/messages/mavlink2rest'
+import { MavCmd, MavResult } from '@/libs/connection/m2r/messages/mavlink2rest-enum'
 import { AlertLevel } from '@/types/alert'
 
 /**
@@ -97,6 +99,26 @@ export class Coordinates {
     }
 
     return this
+  }
+}
+
+/**
+ * Command Acknowledgment
+ */
+export class CommandAck {
+  command: Type<MavCmd>
+  result: Type<MavResult>
+  progress: number
+  resultText: string
+  targetSystem: number
+  targetComponent: number
+
+  /**
+   * Creates an instance of CommandAck.
+   * @param {Partial<CommandAck>} [init]
+   */
+  constructor(init?: Partial<CommandAck>) {
+    Object.assign(this, init)
   }
 }
 

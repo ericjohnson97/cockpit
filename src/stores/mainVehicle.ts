@@ -330,11 +330,24 @@ export const useMainVehicleStore = defineStore('main-vehicle', () => {
   /**
    * Set vehicle flight mode
    * @param {string} modeName
+   * @returns {Promise<boolean>}
    */
-  function setFlightMode(modeName: string): void {
+  async function setFlightMode(modeName: string): Promise<boolean> {
     const enumMode = modes.value?.get(modeName)
-    if (enumMode !== undefined) {
-      mainVehicle.value?.setMode(enumMode)
+    if (enumMode === undefined) {
+      return false
+    }
+
+    try {
+      const success = await mainVehicle.value?.setMode(enumMode)
+      if (success) {
+        return true
+      }else{
+        return false
+      }
+    } catch (error) {
+      console.error(error)
+      return false
     }
   }
 

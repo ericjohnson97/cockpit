@@ -193,6 +193,8 @@ export abstract class ArduPilotVehicle<Modes> extends Vehicle.AbstractVehicle<Mo
               icon: 'error',
               confirmButtonText: 'OK',
             })
+            resolve(new CommandAck())
+            return
           }
           this.onCommandAck.remove(ackHandler)
           reject(new Error('Timeout waiting for command acknowledgment'))
@@ -737,15 +739,26 @@ export abstract class ArduPilotVehicle<Modes> extends Vehicle.AbstractVehicle<Mo
   }
 
   /**
-   * Set vehicle flight mode
-   * @param {'Modes'} mode Custom vehicle mode
+   * Set vehicle flight mode.
+   * @param {Modes} mode Custom vehicle mode.
+   * @returns {Promise<boolean>} A promise that resolves with true if the mode was set successfully, and false otherwise.
    */
-  setMode(mode: Modes): void {
-    this.sendCommandLong(
-      MavCmd.MAV_CMD_DO_SET_MODE,
-      MavModeFlag.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
-      Number(mode) // Custom mode, please refer to the individual autopilot specifications for details
-    )
+  async setMode(mode: Modes): Promise<boolean> {
+    try {
+      const ack = await this.sendCommandLong(
+        MavCmd.MAV_CMD_DO_SET_MODE,
+        MavModeFlag.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
+        Number(mode) // Custom mode, refer to the individual autopilot specifications for details
+      )
+      if (ack.result.type === MavResult.MAV_RESULT_ACCEPTED) {
+        return true
+      } else {
+        return false
+      }
+    } catch (error) {
+      console.error('Error setting mode:', error)
+      return false // Return false in case of any errors during execution
+    }
   }
 
   /**
